@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        group: SCN
+        file-extension: yaml
+        namespace: 4ee7ef32-c1ff-41bf-8e12-c05eea6f4f78
