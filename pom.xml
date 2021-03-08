@@ -13,6 +13,7 @@
         <module>nacos-provider</module>
         <module>nacos-consumer</module>
         <module>nacos-common</module>
+        <module>scn-spring-boot</module>
     </modules>
 
     <properties>
