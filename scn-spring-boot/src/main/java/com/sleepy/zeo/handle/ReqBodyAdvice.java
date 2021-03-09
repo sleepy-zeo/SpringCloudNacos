@@ -44,7 +44,7 @@ public class ReqBodyAdvice implements RequestBodyAdvice {
         //content-length: 26
         //Content-Type: application/json;charset=UTF-8
         for (String headerKey : httpHeaders.keySet()) {
-            System.out.println(headerKey + ": " + httpHeaders.getFirst(headerKey));
+            System.out.println(headerKey + ":" + httpHeaders.get(headerKey));
         }
 
         /* inputStream是不能重复读取的，所以这里不要读，否则controller里无法获取数据

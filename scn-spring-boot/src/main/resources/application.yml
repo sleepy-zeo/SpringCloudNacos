@@ -1,2 +1,15 @@
 server:
   port: 2399
+
+spring:
+  mvc:
+    # 在找不到handler时是否抛出异常，默认为false
+    throw-exception-if-no-handler-found: false
+  resources:
+    # 是否开启默认的资源处理，默认为true，即遇到错误会跳转到默认的错误页面等
+    add-mappings: false
+    static-locations:
+      - classpath:/static
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
