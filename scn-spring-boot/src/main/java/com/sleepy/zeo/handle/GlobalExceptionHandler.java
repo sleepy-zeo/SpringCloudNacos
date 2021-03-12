@@ -25,12 +25,12 @@ public class GlobalExceptionHandler {
         return "er";
     }
 
-    @ExceptionHandler(value = {RuntimeException.class})
-    @ResponseBody
-    public String rtExceptionHandler(RuntimeException e) {
-        System.out.println("RuntimeException");
-        return e.getMessage();
-    }
+//    @ExceptionHandler(value = {RuntimeException.class})
+//    @ResponseBody
+//    public String rtExceptionHandler(RuntimeException e) {
+//        System.out.println("RuntimeException");
+//        return e.getMessage();
+//    }
 
     @ExceptionHandler(value = {NumberFormatException.class})
     @ResponseBody

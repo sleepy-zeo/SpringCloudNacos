@@ -1,5 +1,6 @@
 package com.sleepy.zeo.handle;
 
+import com.sleepy.zeo.common.SCNResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -35,6 +36,13 @@ public class ResBodyAdvice implements ResponseBodyAdvice<Object> {
         System.out.println("ResBodyAdvice beforeBodyWrite, body: " + body + ", returnType: "
                 + methodParameter + ", selectedContentType:" + selectedContentType + ", selectedConverterType: " + selectedConverterType);
 
-        return body;
+        if (body instanceof SCNResult) {
+            System.out.println("xxxx");
+            return body;
+        }
+
+        System.out.println("yyyy");
+
+        return new SCNResult(200, "success", body);
     }
 }
