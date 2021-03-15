@@ -1,5 +1,7 @@
 package com.sleepy.zeo.handle;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sleepy.zeo.common.SCNResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -37,12 +39,16 @@ public class ResBodyAdvice implements ResponseBodyAdvice<Object> {
                 + methodParameter + ", selectedContentType:" + selectedContentType + ", selectedConverterType: " + selectedConverterType);
 
         if (body instanceof SCNResult) {
-            System.out.println("xxxx");
             return body;
         }
-
-        System.out.println("yyyy");
-
+        if (body instanceof String) {
+            ObjectMapper om = new ObjectMapper();
+            try {
+                return om.writeValueAsString(new SCNResult(200, "success", body));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
         return new SCNResult(200, "success", body);
     }
 }

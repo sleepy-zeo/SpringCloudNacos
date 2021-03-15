@@ -40,4 +40,10 @@ public class AdviceController {
         System.out.println("user: " + user);
         return user;
     }
+
+    @RequestMapping(value = "/user2")
+    @ResponseBody
+    String user() {
+        return "string user";
+    }
 }
