@@ -13,3 +13,11 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+  redis:
+    port: 6379
+    host: localhost
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+    timeout: 5000ms

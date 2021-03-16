@@ -14,6 +14,7 @@
         <module>nacos-consumer</module>
         <module>nacos-common</module>
         <module>scn-spring-boot</module>
+        <module>scn-spring-security-jwt</module>
     </modules>
 
     <properties>
