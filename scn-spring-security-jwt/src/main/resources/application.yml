@@ -1,0 +1,6 @@
+server:
+  port: 4005
+
+logging:
+  level:
+    root: info
