@@ -1,6 +1,5 @@
-package com.sleepy.zeo.security;
+package com.sleepy.zeo.security.jwt;
 
-import com.sleepy.zeo.util.JwtManager;
 import lombok.extern.slf4j.Slf4j;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -32,6 +31,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String header = request.getHeader("Authorization");
+
         if (header == null || !header.startsWith("Bearer")) {
             chain.doFilter(request, response);
             return;
@@ -40,7 +40,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         try {
             authentication = getAuthentication(request);
         } catch (InvalidJwtException e) {
-            logger.error(e.getMessage());
             chain.doFilter(request, response);
             return;
         }
@@ -55,7 +54,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             String username = (String) body.getClaimsMap().get("scn-username");
             if (username != null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                return new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
+                return authentication;
             }
         }
         return null;

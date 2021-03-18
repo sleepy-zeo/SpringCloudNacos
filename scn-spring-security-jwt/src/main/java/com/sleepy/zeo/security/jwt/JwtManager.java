@@ -1,4 +1,4 @@
-package com.sleepy.zeo.util;
+package com.sleepy.zeo.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -41,7 +41,7 @@ public class JwtManager {
             publicKey = getPublicKey(getPEMPublicKeyString());
             privateKey = getPrivateKey(getPrivateKeyString());
         } catch (Exception e) {
-            log.error("whw", e);
+            log.error(e.getMessage());
         }
     }
 
@@ -108,7 +108,7 @@ public class JwtManager {
                 claims.setClaim(s, map.get(s));
             }
         }
-        claims.setExpirationTime(NumericDate.fromMilliseconds(System.currentTimeMillis() + 6000 * 1000));
+        claims.setExpirationTime(NumericDate.fromMilliseconds(System.currentTimeMillis() + 10 * 60 * 1000));
         claims.setIssuer("scn-issuer");
         claims.setAudience("scn-audience");
         claims.setIssuedAtToNow();

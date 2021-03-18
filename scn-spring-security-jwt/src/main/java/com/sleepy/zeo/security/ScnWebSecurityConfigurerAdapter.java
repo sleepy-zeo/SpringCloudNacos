@@ -1,5 +1,10 @@
 package com.sleepy.zeo.security;
 
+import com.sleepy.zeo.security.access.ScnPermissionEvaluator;
+import com.sleepy.zeo.security.exception.ScnAccessDeniedHandler;
+import com.sleepy.zeo.security.exception.ScnAuthenticationEntryPoint;
+import com.sleepy.zeo.security.jwt.JwtAuthenticationFilter;
+import com.sleepy.zeo.security.jwt.JwtLoginFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,15 +16,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.DigestUtils;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Slf4j
 public class ScnWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
+
+    private ScnPermissionEvaluator scnPermissionEvaluator;
 
     @Autowired
     @Qualifier("scn-user-service")
@@ -27,34 +34,52 @@ public class ScnWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
         this.userDetailsService = userDetailsService;
     }
 
+    @Autowired
+    public void setScnPermissionEvaluator(ScnPermissionEvaluator scnPermissionEvaluator) {
+        this.scnPermissionEvaluator = scnPermissionEvaluator;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        log.info("configure");
         JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(authenticationManager(), userDetailsService);
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), userDetailsService);
 
         http.csrf().disable();
 
         http.authorizeRequests()
+                .antMatchers("/admin/**").access("hasRole('ADMIN')")
+                .antMatchers("/user/**").access("hasRole('USER')")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(jwtLoginFilter)
-                .addFilterBefore(jwtAuthenticationFilter, JwtLoginFilter.class);
+                .addFilter(jwtAuthenticationFilter);
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(new ScnAuthenticationEntryPoint())
+                .accessDeniedHandler(new ScnAccessDeniedHandler());
+
+        DefaultWebSecurityExpressionHandler webSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
+        webSecurityExpressionHandler.setPermissionEvaluator(scnPermissionEvaluator);
+        http.authorizeRequests()
+                .expressionHandler(webSecurityExpressionHandler);
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(new PasswordEncoder() {
+
+            // 这个方法好像没有用
             @Override
             public String encode(CharSequence charSequence) {
                 log.info("encode: " + charSequence);
                 return charSequence.toString();
             }
 
+            // 只有这个方法有用到
             @Override
-            public boolean matches(CharSequence charSequence, String s) {
-                log.info("matches: " + charSequence + "--" + s);
-                return s.equals(charSequence.toString());
+            public boolean matches(CharSequence charSequence, String encodedPassword) {
+                log.info("matches: " + charSequence + ", encodedPassword: " + encodedPassword);
+                return encodedPassword.equals(charSequence.toString());
             }
         });
     }
