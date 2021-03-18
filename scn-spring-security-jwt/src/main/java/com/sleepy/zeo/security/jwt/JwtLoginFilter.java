@@ -1,9 +1,10 @@
-package com.sleepy.zeo.security;
+package com.sleepy.zeo.security.jwt;
 
-import com.sleepy.zeo.util.JwtManager;
-import lombok.SneakyThrows;
+import com.google.gson.Gson;
+import com.sleepy.zeo.common.AuthResult;
 import lombok.extern.slf4j.Slf4j;
 import org.jose4j.lang.JoseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+
         String username = request.getParameter("username");
         Map<String, Object> body = new HashMap<>();
         body.put("scn-username", username);
@@ -57,5 +59,21 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             logger.error(e.getMessage());
         }
         response.addHeader("Authorization", "Bearer " + token);
+
+        AuthResult result = new AuthResult();
+        result.setCode(HttpStatus.OK);
+        result.setDesc(HttpStatus.OK.getReasonPhrase());
+        result.setToken(token);
+        response.setStatus(HttpStatus.OK.value());
+        response.getWriter().write(new Gson().toJson(result));
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        AuthResult result = new AuthResult();
+        result.setCode(HttpStatus.UNAUTHORIZED);
+        result.setDesc(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(new Gson().toJson(result));
     }
 }
