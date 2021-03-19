@@ -15,12 +15,14 @@
         <module>nacos-common</module>
         <module>scn-spring-boot</module>
         <module>scn-spring-security-jwt</module>
+        <module>scn-spring-security-oath2</module>
     </modules>
 
     <properties>
         <java.version>1.8</java.version>
         <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
         <spring-boot.version>2.3.6.RELEASE</spring-boot.version>
+        <spring-cloud-oauth2-version>2.1.4.RELEASE</spring-cloud-oauth2-version>
         <nacos.version>2.2.0.RELEASE</nacos.version>
     </properties>
 
@@ -44,6 +46,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${spring-cloud-oauth2-version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

@@ -1,0 +1,6 @@
+server:
+  port: 1703
+
+spring:
+  application:
+    name: resource-server
