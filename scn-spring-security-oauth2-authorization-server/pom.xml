@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>scn-spring-security-oath2</artifactId>
+    <artifactId>scn-spring-security-oauth2-authorization-server</artifactId>
 
     <dependencies>
         <dependency>

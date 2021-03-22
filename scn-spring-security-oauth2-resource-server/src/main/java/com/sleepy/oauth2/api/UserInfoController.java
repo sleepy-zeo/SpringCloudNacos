@@ -1,15 +1,16 @@
-package com.sleepy.oath2.security.controller;
+package com.sleepy.oauth2.api;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class AccessTokenController {
+@RequestMapping("/api/info")
+public class UserInfoController {
 
-    @RequestMapping("")
     @ResponseBody
-    public String accessToken(){
-        return "ac";
+    @RequestMapping("")
+    String contacts() {
+        return "Sleepy Zeo; 27; male";
     }
 }

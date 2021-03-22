@@ -1,0 +1,6 @@
+server:
+  port: 1506
+
+spring:
+  application:
+    name: oauth2-authorization-server

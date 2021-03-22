@@ -1,0 +1,6 @@
+server:
+  port: 1632
+
+spring:
+  application:
+    name: oauth2-resource-server

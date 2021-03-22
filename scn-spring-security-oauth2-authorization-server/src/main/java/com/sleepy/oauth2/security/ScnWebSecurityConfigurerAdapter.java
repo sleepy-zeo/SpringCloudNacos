@@ -1,4 +1,4 @@
-package com.sleepy.oath2.security;
+package com.sleepy.oauth2.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -20,14 +20,18 @@ public class ScnWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
+        //配置内存模式默认账户用以认证
         auth.inMemoryAuthentication()
+                //账户名
                 .withUser("admin")
+                //密码（必须encode加密）
                 .password(passwordEncoder.encode("123456"))
+                //角色
                 .roles("ADMIN")
                 .and()
                 .withUser("guest")
                 .password(passwordEncoder.encode("123456"))
                 .roles("GUEST");
     }
+
 }

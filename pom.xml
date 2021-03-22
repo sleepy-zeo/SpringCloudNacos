@@ -15,7 +15,8 @@
         <module>nacos-common</module>
         <module>scn-spring-boot</module>
         <module>scn-spring-security-jwt</module>
-        <module>scn-spring-security-oath2</module>
+        <module>scn-spring-security-oauth2-authorization-server</module>
+        <module>scn-spring-security-oauth2-resource-server</module>
     </modules>
 
     <properties>
