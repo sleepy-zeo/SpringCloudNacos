@@ -1,19 +1,27 @@
 package com.sleepy.oauth2.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.endpoint.TokenKeyEndpoint;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
 
@@ -21,37 +29,27 @@ import javax.sql.DataSource;
 @EnableAuthorizationServer
 public class ScnAuthorizationServerConfigurerAdapter extends AuthorizationServerConfigurerAdapter {
 
+    @Autowired
     private DataSource dataSource;
-    private RedisConnectionFactory redisConnectionFactory;
-
-    private PasswordEncoder passwordEncoder = new PasswordEncoder() {
-        public String encode(CharSequence charSequence) {
-            return charSequence.toString();
-        }
-
-        public boolean matches(CharSequence charSequence, String s) {
-            return charSequence.toString().equals(s);
-        }
-    };
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    @Qualifier("scn-user-service")
+    private UserDetailsService userDetailsService;
 
     @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
-    }
-
-    @Autowired
-    public void setRedisConnectionFactory(RedisConnectionFactory redisConnectionFactory) {
-        this.redisConnectionFactory = redisConnectionFactory;
+    public ApprovalStore approvalStore() {
+        return new JdbcApprovalStore(dataSource);
     }
 
     @Bean
-    public TokenStore redisTokenStore() {
-        return new RedisTokenStore(redisConnectionFactory);
+    public AuthorizationCodeServices authorizationCodeServices() {
+        return new JdbcAuthorizationCodeServices(dataSource);
     }
 
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    @Bean
+    public TokenStore jdbcTokenStore() {
+        return new JdbcTokenStore(dataSource);
     }
 
     @Bean
@@ -62,8 +60,20 @@ public class ScnAuthorizationServerConfigurerAdapter extends AuthorizationServer
     // 配置令牌端点(Token Endpoint)的安全约束
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer.tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
+        oauthServer
+                // /oauth/token
+                //
+                // 允许这样获取access token
+                // curl -X POST
+                // -d "client_id=scn_client_id&&client_secret=scn_client_secret&&grant_type=client_credentials"
+                // http://localhost:1506/oauth/token
+                // .allowFormAuthenticationForClients()
+                // /oauth/token_key
+                // 暂时不知道怎么用???
+                .tokenKeyAccess("permitAll()")
+                // /oauth/check_token
+                // curl http://localhost:1506/oauth/check_token?token=e845b58c-39c2-4656-918e-a1b328768213
+                .checkTokenAccess("permitAll()");
     }
 
     /**
@@ -77,8 +87,8 @@ public class ScnAuthorizationServerConfigurerAdapter extends AuthorizationServer
      * DROP TABLE IF EXISTS `oauth_client_details`;
      * CREATE TABLE `oauth_client_details` (
      *   `client_id` varchar(48) NOT NULL,
-     *   `resource_ids` varchar(256) DEFAULT NULL,
      *   `client_secret` varchar(256) DEFAULT NULL,
+     *   `resource_ids` varchar(256) DEFAULT NULL,
      *   `scope` varchar(256) DEFAULT NULL,
      *   `authorized_grant_types` varchar(256) DEFAULT NULL,
      *   `web_server_redirect_uri` varchar(256) DEFAULT NULL,
@@ -88,19 +98,62 @@ public class ScnAuthorizationServerConfigurerAdapter extends AuthorizationServer
      *   `additional_information` varchar(4096) DEFAULT NULL,
      *   `autoapprove` varchar(256) DEFAULT NULL,
      *   PRIMARY KEY (`client_id`)
-     * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+     * ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户端信息';
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // jdbc存储获取注释中的数据
+        // 客户端信息的存储，相关表为oauth_client_details
         clients.withClientDetails(clientDetails());
-
     }
 
-    // 配置授权(authorization)以及令牌(token)的访问端点和令牌服务(token services)
+    /**
+     * 配置授权(authorization)以及令牌(token)的访问端点和令牌服务(token services)
+     *
+     * DROP TABLE IF EXISTS `oauth_access_token`;
+     * CREATE TABLE `oauth_access_token` (
+     *    `token_id` varchar(256) DEFAULT NULL,
+     *    `token` blob,
+     *    `authentication_id` varchar(128) NOT NULL,
+     *    `user_name` varchar(256) DEFAULT NULL,
+     *    `client_id` varchar(256) DEFAULT NULL,
+     *    `authentication` blob,
+     *    `refresh_token` varchar(256) DEFAULT NULL,
+     *    PRIMARY KEY (`authentication_id`)
+     *  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='访问令牌';
+     *
+     * DROP TABLE IF EXISTS `oauth_code`;
+     * CREATE TABLE `oauth_code` (
+     *    `code` varchar(256) DEFAULT NULL,
+     *    `authentication` blob,
+     *    `create_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+     *  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='授权码';
+     *
+     * DROP TABLE IF EXISTS `oauth_approvals`;
+     * CREATE TABLE `oauth_approvals` (
+     *    `userId` varchar(256) DEFAULT NULL,
+     *    `clientId` varchar(256) DEFAULT NULL,
+     *    `scope` varchar(256) DEFAULT NULL,
+     *    `status` varchar(10) DEFAULT NULL,
+     *    `expiresAt` datetime DEFAULT NULL,
+     *    `lastModifiedAt` datetime DEFAULT NULL
+     *  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='已授权客户端';
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        super.configure(endpoints);
-        endpoints.tokenStore(redisTokenStore());
+        endpoints
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService)
+                // 已授权客户端的存储，相关表为oauth_approvals
+                .approvalStore(approvalStore())
+                // 访问令牌的存储，相关表为oauth_access_token
+                .tokenStore(jdbcTokenStore())
+                // 授权码的存储，相关表为oauth_code
+                .authorizationCodeServices(authorizationCodeServices());
+
+//        // 自定义确认授权页面
+//        endpoints.pathMapping("/oauth/confirm_access", "/oauth/confirm_access");
+//        // 自定义错误页
+//        endpoints.pathMapping("/oauth/error", "/oauth/error");
     }
 }
