@@ -18,10 +18,8 @@ import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.endpoint.TokenKeyEndpoint;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
 
@@ -150,10 +148,5 @@ public class ScnAuthorizationServerConfigurerAdapter extends AuthorizationServer
                 .tokenStore(jdbcTokenStore())
                 // 授权码的存储，相关表为oauth_code
                 .authorizationCodeServices(authorizationCodeServices());
-
-//        // 自定义确认授权页面
-//        endpoints.pathMapping("/oauth/confirm_access", "/oauth/confirm_access");
-//        // 自定义错误页
-//        endpoints.pathMapping("/oauth/error", "/oauth/error");
     }
 }
