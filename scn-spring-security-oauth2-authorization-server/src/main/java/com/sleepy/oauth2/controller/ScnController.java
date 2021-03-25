@@ -7,7 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScnController {
 
     @RequestMapping("")
-    public String index() {
-        return "hello scn";
+    public User index() {
+        return new User();
+    }
+
+    // 只允许这种格式
+    // http://localhost:1506/test?name=xxx
+    @RequestMapping("/test")
+    public String test(User user) {
+        return "hello scn: " + user;
     }
 }

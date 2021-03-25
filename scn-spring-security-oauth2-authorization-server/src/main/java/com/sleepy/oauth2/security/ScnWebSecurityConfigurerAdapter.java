@@ -52,7 +52,7 @@ public class ScnWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
 
         http.authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/test").permitAll()
                 .antMatchers("/oauth/**").authenticated()
                 .and()
                 .httpBasic();
