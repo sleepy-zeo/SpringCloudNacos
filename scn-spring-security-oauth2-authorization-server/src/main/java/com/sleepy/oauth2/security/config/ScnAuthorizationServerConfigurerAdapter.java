@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -47,7 +48,12 @@ public class ScnAuthorizationServerConfigurerAdapter extends AuthorizationServer
 
     @Bean
     public TokenStore jdbcTokenStore() {
-        return new JdbcTokenStore(dataSource);
+        return new JdbcTokenStore(dataSource){
+            @Override
+            protected String extractTokenKey(String value) {
+                return value;
+            }
+        };
     }
 
     @Bean
@@ -118,6 +124,14 @@ public class ScnAuthorizationServerConfigurerAdapter extends AuthorizationServer
      *    `refresh_token` varchar(256) DEFAULT NULL,
      *    PRIMARY KEY (`authentication_id`)
      *  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='访问令牌';
+     *
+     * DROP TABLE IF EXISTS `oauth_refresh_token`;
+     * CREATE TABLE `oauth_refresh_token` (
+     *    `token_id` varchar(256) NOT NULL,
+     *    `token` blob,
+     *    `authentication` blob,
+     *    PRIMARY KEY (`token_id`)
+     *  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刷新令牌';
      *
      * DROP TABLE IF EXISTS `oauth_code`;
      * CREATE TABLE `oauth_code` (
