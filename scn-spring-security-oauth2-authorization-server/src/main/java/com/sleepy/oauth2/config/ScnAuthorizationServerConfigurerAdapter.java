@@ -1,4 +1,4 @@
-package com.sleepy.oauth2.security.config;
+package com.sleepy.oauth2.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
