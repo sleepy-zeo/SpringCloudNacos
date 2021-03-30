@@ -1,0 +1,11 @@
+server:
+  port: 1115
+
+spring:
+  application:
+    name: oauth2-authorization-server
+  datasource:
+    url: jdbc:mysql://localhost:3306/scn_mp?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1994

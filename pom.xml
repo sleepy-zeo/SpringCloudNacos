@@ -17,6 +17,7 @@
         <module>scn-spring-security-jwt</module>
         <module>scn-spring-security-oauth2-authorization-server</module>
         <module>scn-spring-security-oauth2-resource-server</module>
+        <module>scn-mp</module>
     </modules>
 
     <properties>
