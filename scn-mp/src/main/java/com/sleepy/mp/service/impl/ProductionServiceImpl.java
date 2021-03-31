@@ -1,6 +1,7 @@
 package com.sleepy.mp.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sleepy.mp.database.dao.ProductionMapper;
@@ -9,13 +10,12 @@ import com.sleepy.mp.service.ProductionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class ProductionServiceImpl extends ServiceImpl<ProductionMapper,Production> implements ProductionService {
+public class ProductionServiceImpl extends ServiceImpl<ProductionMapper, Production> implements ProductionService {
 
     @Autowired
     private ProductionMapper productionMapper;
@@ -57,14 +57,112 @@ public class ProductionServiceImpl extends ServiceImpl<ProductionMapper,Producti
 
     // 插入单条数据
     public boolean insertProduction(Production production) {
-        ServiceImpl<ProductionMapper, Production> productionService = new ServiceImpl<>();
         return save(production);
     }
 
     // 批量插入数据
-    public boolean insertBatchProduction(List<Production> productionList) {
-        ServiceImpl<ProductionMapper, Production> productionService = new ServiceImpl<>();
+    public boolean insertBatchProductions(List<Production> productionList) {
+        System.out.println(productionList);
         return saveBatch(productionList);
+    }
+
+    public boolean deleteProduction(int id) {
+        return removeById(id);
+    }
+
+    public boolean deleteBatchProductions(List<Integer> ids) {
+        return removeByIds(ids);
+    }
+
+    public boolean updateProduction(Production production) {
+        return updateById(production);
+    }
+
+    public boolean updateBatchProductions(List<Production> productionList) {
+        return updateBatchById(productionList);
+    }
+
+    public Production selectProduction() {
+        QueryWrapper<Production> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("production_id", 250);
+
+        return getOne(queryWrapper);
+    }
+
+    public List<Production> selectProductions() {
+        QueryWrapper<Production> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lt("price", 3);
+
+        return list(queryWrapper);
+    }
+
+    public boolean updateProduction() {
+        Production production = new Production();
+        production.setProductionId(249L);
+        production.setPrice(650);
+        production.setAmount(500);
+        production.setProductionName("airpods");
+
+        return updateById(production);
+    }
+
+    public boolean updateBatchProductions() {
+        List<Production> list = new ArrayList<>();
+        {
+            Production production = new Production();
+            production.setProductionId(240L);
+            production.setPrice(650);
+            production.setAmount(500);
+            production.setProductionName("airpods");
+            list.add(production);
+        }
+
+        {
+            Production production = new Production();
+            production.setProductionId(241L);
+            production.setPrice(550);
+            production.setAmount(100);
+            production.setProductionName("airkits");
+            list.add(production);
+        }
+
+        {
+            Production production = new Production();
+            production.setProductionId(242L);
+            production.setPrice(350);
+            production.setAmount(400);
+            production.setProductionName("airphones");
+            list.add(production);
+        }
+
+        return updateBatchById(list);
+    }
+
+    @Override
+    public Production getSomethingPrimitive() {
+        return productionMapper.queryPrimitive(300);
+    }
+
+    public IPage<Production> getSomething(){
+        Page<Production> page = new Page<>();
+        page.setSize(5);
+        page.setCurrent(1);
+
+        QueryWrapper<Production> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("price", 650);
+
+        return productionMapper.query(page,queryWrapper);
+    }
+
+    public IPage<Map<String, Object>> getSomething2(){
+        Page<Production> page = new Page<>();
+        page.setSize(5);
+        page.setCurrent(1);
+
+        QueryWrapper<Production> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("price", 650);
+
+        return productionMapper.query2(page,queryWrapper);
     }
 
 }
