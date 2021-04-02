@@ -1,6 +1,9 @@
 package com.sleepy.mp.database.po;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +16,10 @@ import java.util.Date;
 @TableName("tb_production")
 public class Production {
 
-    // 添加了type = IdType.AUTO后，手动设置的productionId将失效
-    @TableId(value = "production_id", type = IdType.AUTO)
+    @TableId(value = "production_id")
     private Long productionId;
 
+    @TableField(value = "production_name", fill = FieldFill.DEFAULT)
     private String productionName;
 
     private Integer price;

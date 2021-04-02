@@ -6,12 +6,13 @@ import com.sleepy.mp.database.po.Production;
 import com.sleepy.mp.service.ProductionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,21 +96,27 @@ public class ScnController {
         return productionService.getSomethingPrimitive();
     }
 
-    public Production test() {
+    @RequestMapping("/ss")
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = Error.class)
+    public Production ss(long id, String name) throws IOException {
         Production p = new Production();
-        p.setProductionName("ggg");
-        p.setProductionId(400L);
-//        p.setCreateTime(new Date(System.currentTimeMillis()-100000));
-        boolean result = productionService.insertProduction(p);
+        p.setProductionName(name == null ? "" : name);
+        p.setProductionId(id);
+        System.out.println(p);
+        productionService.insertProduction(p);
 
-        System.out.println(result);
         return p;
     }
 
-    @RequestMapping("/ss")
-    @Transactional(rollbackFor = Exception.class,noRollbackFor = Error.class)
-    public Production ss() throws IOException {
-        Production p = test();
+    @RequestMapping("/se")
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = Error.class)
+    public Production se(long id, String name) throws IOException {
+        Production p = new Production();
+        p.setProductionName(name == null ? "" : name);
+        p.setProductionId(id);
+        System.out.println(p);
+        productionService.updateById(p);
+
         return p;
     }
 
