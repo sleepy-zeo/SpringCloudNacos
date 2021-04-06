@@ -41,7 +41,7 @@ public class ScnController {
     public boolean saveBatch() {
         List<Production> list = new ArrayList<>();
         for (int i = 0; i < 230; ++i) {
-            list.add(new Production(null, "pro" + i, i / 20, 50, null));
+            //list.add(new Production(null, "pro" + i, i / 20, 50, null));
         }
         return productionService.insertBatchProductions(list);
     }
@@ -102,6 +102,7 @@ public class ScnController {
         Production p = new Production();
         p.setProductionName(name == null ? "" : name);
         p.setProductionId(id);
+        p.setPrice(5);
         System.out.println(p);
         productionService.insertProduction(p);
 
@@ -114,6 +115,7 @@ public class ScnController {
         Production p = new Production();
         p.setProductionName(name == null ? "" : name);
         p.setProductionId(id);
+        p.setPrice(5);
         System.out.println(p);
         productionService.updateById(p);
 
