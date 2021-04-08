@@ -2,16 +2,11 @@ package com.sleepy.mp.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,12 +24,11 @@ public class ScnWebMvcConfigurer implements WebMvcConfigurer {
 
     private static class ScnInterceptor implements HandlerInterceptor {
 
-
         // 会在Controller处理前调用该方法，返回true则进入对应的Controller
         // 可以用来编码，安全控制，权限校验等
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-            log.debug("preHandle: "+handler+", is: "+(handler instanceof HandlerMethod));
+            log.debug("preHandle: " + handler + ", is: " + (handler instanceof HandlerMethod));
             return true;
         }
 

@@ -3,9 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 </head>
 <body>
 
-aaabbbcccdddeee
 </body>
+
+<script>
+    $.ajax({
+            url: "http://localhost:1115/hello",
+            headers: {
+              'token':"abcd",
+            },
+            type: 'DELETE',
+            success: function(data) {
+                console.log(data)
+            },
+            error: function(err) {
+                console.error(err)
+            }
+        });
+</script>
 </html>
