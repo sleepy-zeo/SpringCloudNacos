@@ -54,6 +54,7 @@ public class ScnWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/img/**").addResourceLocations("classpath:/img/");
+        registry.addResourceHandler("/file/**").addResourceLocations("classpath:/file/");
         registry.addResourceHandler("/outer/**").addResourceLocations("file:C:\\Users\\Administrator\\OneDrive\\VaadPictures\\wallpaper/");
     }
 

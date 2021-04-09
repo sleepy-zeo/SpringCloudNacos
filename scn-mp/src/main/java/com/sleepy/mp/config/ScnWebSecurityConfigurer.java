@@ -52,6 +52,8 @@ public class ScnWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors();
         http.authorizeRequests()
+                .antMatchers("/img/**").permitAll()
+                .antMatchers("/file/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()));
