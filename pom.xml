@@ -18,6 +18,8 @@
         <module>scn-spring-security-oauth2-authorization-server</module>
         <module>scn-spring-security-oauth2-resource-server</module>
         <module>scn-mp</module>
+        <module>scn-event-listener</module>
+        <module>scn-amqp</module>
     </modules>
 
     <properties>
