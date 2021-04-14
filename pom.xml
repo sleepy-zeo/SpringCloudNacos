@@ -20,6 +20,7 @@
         <module>scn-mp</module>
         <module>scn-event-listener</module>
         <module>scn-amqp</module>
+        <module>scn-annotation</module>
     </modules>
 
     <properties>

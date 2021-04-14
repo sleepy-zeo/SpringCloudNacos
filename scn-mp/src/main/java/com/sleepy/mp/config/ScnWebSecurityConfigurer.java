@@ -54,6 +54,7 @@ public class ScnWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/img/**").permitAll()
                 .antMatchers("/file/**").permitAll()
+                .antMatchers("/hello").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()));
