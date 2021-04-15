@@ -1,0 +1,10 @@
+server:
+  port: 1509
+
+cos:
+  app_id: 1259453839
+  secret_id: AKIDT9ajeMq63mHsDLAuI7VebFivrZAplanV
+  secret_key: gGagjWKsyEEH4Lq5Ua4oXx93nIaeNaYG
+  bucket_name: lullaby-1259453839
+  region: ap-nanjing
+  domain: https://lullaby-1259453839.cos.ap-nanjing.myqcloud.com

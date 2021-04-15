@@ -1,0 +1,8 @@
+server:
+  port: 1358
+
+wx:
+  miniapp:
+    app_id: 12345678
+    secret: bbbb
+    token: cccc

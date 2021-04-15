@@ -1,0 +1,8 @@
+server:
+  port: 1605
+
+spring:
+  elasticsearch:
+    rest:
+      uris:
+        - http://192.168.3.25:9200

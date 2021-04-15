@@ -26,6 +26,8 @@ public class ScnWebMvcConfigurer implements WebMvcConfigurer {
 
         // 会在Controller处理前调用该方法，返回true则进入对应的Controller
         // 可以用来编码，安全控制，权限校验等
+        //
+        // handler可以是HandlerMethod，也可以是ResourceHttpRequestHandler
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             log.debug("preHandle: " + handler + ", is: " + (handler instanceof HandlerMethod));

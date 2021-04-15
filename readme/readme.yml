@@ -2,22 +2,34 @@
 # application.yml主要是应用程序特有的配置信息
 # 加载顺序为bootstrap.yml -> application.yml -> application-dev.yml，后面加载的属性值会覆盖前面的同名属性的值
 
+# bootstrap.yml中配置module在nacos上的config文件的信息
+#
 # nacos要求spring.cloud.nacos.config的配置必须在bootstrap.yml中
 # 这里将环境写死在配置文件中，实际应用中更多是通过-Dspring.profiles.active=<profile>参数来指定环境(*)
-
+#
 # 在nacos中dataId完整格式为${prefix}-${spring.profiles.active}.${file-extension}
 # 通过设置spring.cloud.nacos.prefix来配置prefix，默认为spring.application.name的值
 # 通过设置spring.profiles.active来配置spring.profiles.active，当该值为空时，dataId的拼接格式变成 ${prefix}.${file-extension}
 # 通过设置spring.cloud.nacos.config.file-extension来配置file-extension，目前只支持properties和yaml两个值
-# 像是下面这种配置，会优先找scn-test.yaml配置，如果找不到会找scn.yaml，如果两个都找不到则表明nacos服务器上没有对应的配置
-
+# 像是下面这种配置，会优先找scn-test.yaml配置，如果找不到scn-test.yaml文件则会接着搜寻scn.yaml文件，如果两个都找不到则表明nacos服务器上没有对应的配置
+#
 # 通过设置spring.cloud.nacos.config.group=xx来设置当前模块的config分组
 # 通过设置spring.cloud.nacos.config.enabled=false来完全关闭Spring Cloud Nacos Config
+#
+# namespace
+# 区分环境，建议只取public/dev/prod/test几个值，取代了(*)的内容
+# group
+# 区分application，建议同一个application的group相同，不同application的group不同
+#
 
-# namespace用来区分不同的环境，相当于一个环境集合，建议只取public/dev/prod/test几个值，相当于取代了(*)的内容
-# group用来区分不同的application，建议一个application内所有的服务的group相同
+# application.yml中将module注册到nacos服务器
+#
+# spring.cloud.nacos.discovery.enabled 设置nacos服务端是否发现该服务
+# spring.cloud.nacos.discovery.server-addr 设置nacos服务器地址
+# spring.cloud.nacos.discovery.namespace 设置注册到nacos服务器的环境
+# spring.cloud.nacos.discovery.group 设置注册到nacos服务器的分组
+#
 
-# 通过设置spring.cloud.nacos.discovery.enabled=false，nacos服务端将无法发现该服务
 spring:
   cloud:
     nacos:

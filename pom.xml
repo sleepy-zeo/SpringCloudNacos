@@ -21,6 +21,10 @@
         <module>scn-event-listener</module>
         <module>scn-amqp</module>
         <module>scn-annotation</module>
+        <module>scn-conditional</module>
+        <module>scn-properties</module>
+        <module>scn-es</module>
+        <module>scn-qcloud</module>
     </modules>
 
     <properties>

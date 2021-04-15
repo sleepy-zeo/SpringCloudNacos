@@ -15,6 +15,7 @@ import java.io.IOException;
 // 未授权
 @Slf4j
 public class ScnAccessDeniedHandler implements AccessDeniedHandler {
+
     @Override
     public void handle(HttpServletRequest httpServletRequest,
                        HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {

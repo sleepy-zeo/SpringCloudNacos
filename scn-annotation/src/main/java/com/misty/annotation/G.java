@@ -14,4 +14,11 @@ public class G {
         System.out.println("BindException: " + e.getMessage());
         return "BindException";
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseBody
+    public String nfExceptionHandler(Exception e) {
+        System.out.println("Ex: " + e.getMessage());
+        return "Ex";
+    }
 }
