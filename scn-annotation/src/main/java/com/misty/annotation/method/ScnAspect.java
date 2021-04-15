@@ -1,4 +1,4 @@
-package com.misty.annotation;
+package com.misty.annotation.method;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,9 +10,9 @@ import java.lang.reflect.Method;
 
 @Aspect
 @Component
-public class LogAspect {
+public class ScnAspect {
 
-    @Pointcut(value = "@annotation(com.misty.annotation.LogAnnotation)")
+    @Pointcut(value = "@annotation(com.misty.annotation.method.ScnAnnotation)")
     private void pointcut() {
     }
 
@@ -20,15 +20,15 @@ public class LogAspect {
      * 在方法执行前后
      *
      * @param point
-     * @param logAnnotation
+     * @param scnAnnotation
      * @return
      */
-    @Around(value = "pointcut() && @annotation(logAnnotation)")
-    public Object around(ProceedingJoinPoint point, LogAnnotation logAnnotation) {
+    @Around(value = "pointcut() && @annotation(scnAnnotation)")
+    public Object around(ProceedingJoinPoint point, ScnAnnotation scnAnnotation) {
 
         System.out.println("执行了around方法");
 
-        String msg = logAnnotation.desc();
+        String msg = scnAnnotation.desc();
         //拦截的类名
         Class clazz = point.getTarget().getClass();
         //拦截的方法
@@ -48,12 +48,12 @@ public class LogAspect {
      * 方法执行后
      *
      * @param joinPoint
-     * @param logAnnotation
+     * @param scnAnnotation
      * @param result
      * @return
      */
-    @AfterReturning(value = "pointcut() && @annotation(logAnnotation)", returning = "result")
-    public Object afterReturning(JoinPoint joinPoint, LogAnnotation logAnnotation, Object result) {
+    @AfterReturning(value = "pointcut() && @annotation(scnAnnotation)", returning = "result")
+    public Object afterReturning(JoinPoint joinPoint, ScnAnnotation scnAnnotation, Object result) {
         System.out.println("执行了afterReturning方法: result=" + result);
         return result;
     }
@@ -62,13 +62,13 @@ public class LogAspect {
      * 方法执行后 并抛出异常
      *
      * @param joinPoint
-     * @param logAnnotation
+     * @param scnAnnotation
      * @param ex
      */
-    @AfterThrowing(value = "pointcut() && @annotation(logAnnotation)", throwing = "ex")
-    public void afterThrowing(JoinPoint joinPoint, LogAnnotation logAnnotation, Exception ex) {
+    @AfterThrowing(value = "pointcut() && @annotation(scnAnnotation)", throwing = "ex")
+    public void afterThrowing(JoinPoint joinPoint, ScnAnnotation scnAnnotation, Exception ex) {
         System.out.println("执行了afterThrowing方法");
-        System.out.println("请求：" + logAnnotation.desc() + " 出现异常");
+        System.out.println("请求：" + scnAnnotation.desc() + " 出现异常");
     }
 
 }
