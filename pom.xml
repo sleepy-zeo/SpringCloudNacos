@@ -25,6 +25,7 @@
         <module>scn-properties</module>
         <module>scn-es</module>
         <module>scn-qcloud</module>
+        <module>scn-error</module>
     </modules>
 
     <properties>
