@@ -3,7 +3,8 @@ package com.lullaby.error.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class ScnController {
@@ -14,8 +15,7 @@ public class ScnController {
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ResponseBody
-    public String test() {
-        throw new IllegalArgumentException("ill");
+    public String test(HttpServletResponse response) {
+        return "example";
     }
 }
