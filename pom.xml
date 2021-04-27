@@ -26,6 +26,7 @@
         <module>scn-es</module>
         <module>scn-qcloud</module>
         <module>scn-error</module>
+        <module>scn-shiro</module>
     </modules>
 
     <properties>
@@ -35,6 +36,13 @@
         <spring-cloud-oauth2-version>2.1.4.RELEASE</spring-cloud-oauth2-version>
         <nacos.version>2.2.0.RELEASE</nacos.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
