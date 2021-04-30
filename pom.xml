@@ -27,6 +27,7 @@
         <module>scn-qcloud</module>
         <module>scn-error</module>
         <module>scn-shiro</module>
+        <module>scn-jwt-shiro</module>
     </modules>
 
     <properties>
