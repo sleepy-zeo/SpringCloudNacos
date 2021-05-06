@@ -28,6 +28,7 @@
         <module>scn-error</module>
         <module>scn-shiro</module>
         <module>scn-jwt-shiro</module>
+        <module>sp-shiro-jwt-redis</module>
     </modules>
 
     <properties>
