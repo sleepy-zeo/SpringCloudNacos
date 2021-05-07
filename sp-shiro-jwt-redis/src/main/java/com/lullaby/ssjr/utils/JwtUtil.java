@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jose4j.base64url.internal.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import sun.security.util.DerInputStream;
@@ -20,12 +21,21 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class JwtUtil {
 
     private static PublicKey publicKey;
     private static PrivateKey privateKey;
+
+    private static String accessTokenExpireTime;
+
+    @Value("${accessTokenExpireTime}")
+    public void setAccessTokenExpireTime(String accessTokenExpireTime) {
+        JwtUtil.accessTokenExpireTime = accessTokenExpireTime;
+    }
 
     static {
         try {
@@ -89,14 +99,15 @@ public class JwtUtil {
         return IOUtils.toString(new FileInputStream(resource.getFile()));
     }
 
-    private static final long EXPIRE = 504800;
-
-    public static String generateToken(long userId) {
+    public static String generateToken(String account) {
         Date nowDate = new Date();
-        Date expireDate = new Date(nowDate.getTime() + EXPIRE * 1000);
+        Date expireDate = new Date(nowDate.getTime() + Long.parseLong(accessTokenExpireTime) * 1000);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("account", account);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userId))
+                .setClaims(claims)
                 .setHeaderParam("typ", "JWT")
                 .setIssuedAt(nowDate)
                 .setExpiration(expireDate)
