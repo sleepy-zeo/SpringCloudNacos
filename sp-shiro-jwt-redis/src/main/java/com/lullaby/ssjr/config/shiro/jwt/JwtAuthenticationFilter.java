@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends AuthenticationFilter {
             onLoginFailed(servletResponse, "jwt format not valid");
             return false;
         }
+        // 前端传过来的token
         String jwt = header.replace("Bearer", "").trim();
         if (jwt.length() == 0) {
             onLoginFailed(servletResponse, "empty jwt token");

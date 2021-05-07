@@ -7,6 +7,7 @@ import com.lullaby.ssjr.common.entity.User;
 import com.lullaby.ssjr.config.redis.JedisTemplate;
 import com.lullaby.ssjr.utils.AesCipherUtil;
 import com.lullaby.ssjr.utils.JwtUtil;
+import com.lullaby.ssjr.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -40,13 +41,18 @@ public class AuthController {
         String key = AesCipherUtil.deCrypto(userTemp.getPassword());
         // 因为密码加密是以帐号+密码的形式进行加密的，所以解密后的对比是前端传过来的帐号+密码
         if (key.equals(userDto.getAccount() + userDto.getPassword())) {
+            String currentAuthRequestUUID = UUIDUtil.uuid();
+            String currentTimeMillis = String.valueOf(System.currentTimeMillis());
+
+            //
+
             // 清除可能存在的Shiro权限信息缓存
             if (jedisTemplate.exists(Constants.PREFIX_SHIRO_CACHE + userDto.getAccount())) {
-                jedisTemplate.delKey(Constants.PREFIX_SHIRO_CACHE + userDto.getAccount());
+                //jedisTemplate.delKey(Constants.PREFIX_SHIRO_CACHE + userDto.getAccount());
             }
             // 设置RefreshToken，值为当前时间戳
-            String currentTimeMillis = String.valueOf(System.currentTimeMillis());
             jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + userDto.getAccount(), currentTimeMillis, Integer.parseInt(refreshTokenExpireTime));
+            // 将账号信息 -> accessToken
             String token = JwtUtil.generateToken(userDto.getAccount());
             return new ResponseResult(HttpStatus.OK.value(), "登录成功(Login Success.)", token);
         } else {

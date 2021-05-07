@@ -1,5 +1,8 @@
 package com.lullaby.ssjr.config.shiro.jwt;
 
+import com.lullaby.ssjr.common.Constants;
+import com.lullaby.ssjr.common.entity.User;
+import com.lullaby.ssjr.config.redis.JedisTemplate;
 import com.lullaby.ssjr.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +12,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -18,6 +22,9 @@ import java.util.Set;
 @Component
 public class JwtRealm extends AuthorizingRealm {
 
+    @Autowired
+    private JedisTemplate jedisTemplate;
+
     @Override
     public boolean supports(AuthenticationToken token) {
         return token instanceof JwtToken;
@@ -25,6 +32,7 @@ public class JwtRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        // JwtAuthenticationFilter中login传入的token
         JwtToken jwtToken = (JwtToken) token;
 
         String jwt = (String) jwtToken.getCredentials();
@@ -33,8 +41,21 @@ public class JwtRealm extends AuthorizingRealm {
         if (claims == null) {
             throw new UnknownAccountException();
         }
+        String account = (String) claims.get("account");
+        log.info("doGetAuthenticationInfo, account: " + account);
+        // 模拟从数据库中查询到的数据
+        User userTemp = new User();
+        userTemp.setAccount("233452@outlook.com");
+        userTemp.setPassword("Rjk2MDVEM0E2NEE1NDFGN0U5OEI4NDU0NUFENDVBOUNCRkExOTc3RTgzNDQ5NTM2NEI0MjkxMDc2NkZBRTNFNQ==");
+        if (userTemp == null) {
+            throw new AuthenticationException("该帐号不存在(The account does not exist.)");
+        }
 
-        return new SimpleAuthenticationInfo("whw", jwt, getName());
+        if (jedisTemplate.exists(Constants.PREFIX_SHIRO_REFRESH_TOKEN + account)) {
+            return new SimpleAuthenticationInfo(jwt, jwt, getName());
+        } else {
+            throw new AuthenticationException("Token已过期(Token expired or incorrect.)");
+        }
     }
 
     @Override

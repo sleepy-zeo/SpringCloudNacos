@@ -10,6 +10,7 @@ import org.jose4j.base64url.internal.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import sun.security.util.DerInputStream;
 import sun.security.util.DerValue;
 
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@Component
 public class JwtUtil {
 
     private static PublicKey publicKey;
@@ -34,6 +36,7 @@ public class JwtUtil {
 
     @Value("${accessTokenExpireTime}")
     public void setAccessTokenExpireTime(String accessTokenExpireTime) {
+        log.info("accessTokenExpireTime: "+accessTokenExpireTime);
         JwtUtil.accessTokenExpireTime = accessTokenExpireTime;
     }
 

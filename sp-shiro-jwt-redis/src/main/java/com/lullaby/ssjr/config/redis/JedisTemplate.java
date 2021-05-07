@@ -3,10 +3,8 @@ package com.lullaby.ssjr.config.redis;
 import com.lullaby.ssjr.common.CustomException;
 import com.lullaby.ssjr.utils.SerializableUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,11 +13,8 @@ import java.util.Set;
 @Component
 public class JedisTemplate {
 
-    @Autowired
-    private JedisPool jedisPool;
-
     public Object getObject(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             byte[] bytes = jedis.get(key.getBytes());
             if (bytes != null) {
                 return SerializableUtil.deserialize(bytes);
@@ -31,7 +26,7 @@ public class JedisTemplate {
     }
 
     public String setObject(String key, Object value) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             return jedis.set(key.getBytes(), SerializableUtil.serialize(value));
         } catch (Exception e) {
             throw new CustomException("设置Redis键值setObject方法异常:key=" + key + " value=" + value + " cause=" + e.getMessage());
@@ -40,7 +35,7 @@ public class JedisTemplate {
 
     public String setObject(String key, Object value, int expireTime) {
         String result;
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             result = jedis.set(key.getBytes(), SerializableUtil.serialize(value));
             jedis.expire(key.getBytes(), expireTime);
             return result;
@@ -50,7 +45,7 @@ public class JedisTemplate {
     }
 
     public String getJson(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             return jedis.get(key);
         } catch (Exception e) {
             throw new CustomException("获取Redis键值getJson方法异常:key=" + key + " cause=" + e.getMessage());
@@ -58,7 +53,7 @@ public class JedisTemplate {
     }
 
     public String setJson(String key, String value) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             return jedis.set(key, value);
         } catch (Exception e) {
             throw new CustomException("设置Redis键值setJson方法异常:key=" + key + " value=" + value + " cause=" + e.getMessage());
@@ -67,7 +62,7 @@ public class JedisTemplate {
 
     public String setJson(String key, String value, int expiretime) {
         String result;
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             result = jedis.set(key, value);
             jedis.expire(key, expiretime);
 
@@ -78,7 +73,7 @@ public class JedisTemplate {
     }
 
     public Long delKey(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             return jedis.del(key.getBytes());
         } catch (Exception e) {
             throw new CustomException("删除Redis的键delKey方法异常:key=" + key + " cause=" + e.getMessage());
@@ -86,7 +81,7 @@ public class JedisTemplate {
     }
 
     public Boolean exists(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             return jedis.exists(key.getBytes());
         } catch (Exception e) {
             throw new CustomException("查询Redis的键是否存在exists方法异常:key=" + key + " cause=" + e.getMessage());
@@ -94,7 +89,7 @@ public class JedisTemplate {
     }
 
     public Set<String> keysS(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             return jedis.keys(key);
         } catch (Exception e) {
             throw new CustomException("模糊查询Redis的键集合keysS方法异常:key=" + key + " cause=" + e.getMessage());
@@ -102,7 +97,7 @@ public class JedisTemplate {
     }
 
     public Set<byte[]> keysB(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             return jedis.keys(key.getBytes());
         } catch (Exception e) {
             throw new CustomException("模糊查询Redis的键集合keysB方法异常:key=" + key + " cause=" + e.getMessage());
@@ -111,7 +106,7 @@ public class JedisTemplate {
 
     public Long ttl(String key) {
         Long result = -2L;
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (Jedis jedis = JedisConfig.getPool().getResource()) {
             result = jedis.ttl(key);
             return result;
         } catch (Exception e) {
@@ -120,17 +115,17 @@ public class JedisTemplate {
     }
 
     public void flushDB() {
-        Jedis jedis = jedisPool.getResource();
+        Jedis jedis = JedisConfig.getPool().getResource();
         jedis.flushDB();
     }
 
     public int dbSize(byte[] pattern) {
-        Jedis jedis = jedisPool.getResource();
+        Jedis jedis = JedisConfig.getPool().getResource();
         return jedis.keys(pattern).size();
     }
 
     public Set<Object> keys(byte[] pattern) {
-        Jedis jedis = jedisPool.getResource();
+        Jedis jedis = JedisConfig.getPool().getResource();
         Set<byte[]> keys = jedis.keys(pattern);
         Set<Object> set = new HashSet<Object>();
         for (byte[] bs : keys) {
