@@ -50,34 +50,15 @@ public class JwtRealm extends AuthorizingRealm {
         String accessKey = (String) claims.get(Constants.JWT_CLAIMS_KEY_ACCESS_KEY);
         log.info("doGetAuthenticationInfo, accessKey: " + accessKey);
 
-        if (jedisTemplate.exists(Constants.PREFIX_SHIRO_CACHE + accessKey)) {
-            log.info("cache exists");
-            // redis中存在缓存的认证信息
-            return new SimpleAuthenticationInfo(jwt, jwt, getName());
-        } else if (jedisTemplate.exists(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey)) {
-            log.info("refresh exists");
-            // redis中不存在缓存的认证信息，但是存在refreshToken信息
-            // TODO: 返回新的accessToken，并替换redis中相关值
-            jedisTemplate.setObject(Constants.PREFIX_SHIRO_CACHE + accessKey, accessKey, Integer.parseInt(cacheTokenExpireTime));
-            jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey, accessKey, Integer.parseInt(refreshTokenExpireTime));
-            return new SimpleAuthenticationInfo(jwt, jwt, getName());
-        } else {
-            // redis中没有任何相关信息
-
-            log.info("db exists");
-            // 模拟从数据库中查询
-            String account = accessKey.substring(0, accessKey.length() - UUIDUtil.uuidLength());
-            User userTemp = new User();
-            userTemp.setAccount(account);
-            userTemp.setPassword("Rjk2MDVEM0E2NEE1NDFGN0U5OEI4NDU0NUFENDVBOUNCRkExOTc3RTgzNDQ5NTM2NEI0MjkxMDc2NkZBRTNFNQ==");
-            if (userTemp == null) {
-                throw new AuthenticationException("该帐号不存在(The account does not exist.)");
-            }
-            // TODO: 返回新的accessToken，并替换redis中相关值
-            jedisTemplate.setObject(Constants.PREFIX_SHIRO_CACHE + accessKey, accessKey, Integer.parseInt(cacheTokenExpireTime));
-            jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey, accessKey, Integer.parseInt(refreshTokenExpireTime));
-            return new SimpleAuthenticationInfo(jwt, jwt, getName());
+        // 模拟从数据库中查询
+        String account = accessKey.substring(0, accessKey.length() - UUIDUtil.uuidLength());
+        User userTemp = new User();
+        userTemp.setAccount(account);
+        userTemp.setPassword("Rjk2MDVEM0E2NEE1NDFGN0U5OEI4NDU0NUFENDVBOUNCRkExOTc3RTgzNDQ5NTM2NEI0MjkxMDc2NkZBRTNFNQ==");
+        if (userTemp == null) {
+            throw new AuthenticationException("该帐号不存在(The account does not exist.)");
         }
+        return new SimpleAuthenticationInfo(jwt, jwt, getName());
     }
 
     @Override
