@@ -26,10 +26,6 @@ public class JwtRealm extends AuthorizingRealm {
 
     @Autowired
     private JedisTemplate jedisTemplate;
-    @Value("${shiro.cacheTokenExpireTime}")
-    private String cacheTokenExpireTime;
-    @Value("${shiro.refreshTokenExpireTime}")
-    private String refreshTokenExpireTime;
 
     @Override
     public boolean supports(AuthenticationToken token) {

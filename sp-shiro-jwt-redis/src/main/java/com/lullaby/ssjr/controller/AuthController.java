@@ -22,6 +22,8 @@ public class AuthController {
 
     @Autowired
     private JedisTemplate jedisTemplate;
+    @Value("${shiro.cacheTokenExpireTime}")
+    private String cacheTokenExpireTime;
     @Value("${shiro.refreshTokenExpireTime}")
     private String refreshTokenExpireTime;
 
@@ -48,6 +50,8 @@ public class AuthController {
             if (jedisTemplate.exists(Constants.PREFIX_SHIRO_CACHE + accessKey)) {
                 jedisTemplate.delKey(Constants.PREFIX_SHIRO_CACHE + accessKey);
             }
+            // 设置CacheToken
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_CACHE + accessKey, accessKey, Integer.parseInt(cacheTokenExpireTime));
             // 设置RefreshToken，值为当前时间戳
             jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey, accessKey, Integer.parseInt(refreshTokenExpireTime));
             // account+uuid -> accessToken

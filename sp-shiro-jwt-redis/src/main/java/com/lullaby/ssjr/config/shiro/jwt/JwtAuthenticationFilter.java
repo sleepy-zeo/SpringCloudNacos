@@ -87,11 +87,11 @@ public class JwtAuthenticationFilter extends AuthenticationFilter {
             }
             return refreshToken(servletResponse, account, uuid);
         } else {
-            log.info("db exists");
+            log.info("login to authenticate whether db exists");
             // redis中没有任何相关信息
             Subject subject = SecurityUtils.getSubject();
             subject.login(jwtToken);
-
+            log.info("db exists");
             String account = accessKey.substring(0, accessKey.length() - UUIDUtil.uuidLength());
             String uuid = UUIDUtil.uuid();
             return refreshToken(servletResponse, account, uuid);
