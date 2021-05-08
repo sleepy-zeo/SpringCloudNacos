@@ -4,6 +4,7 @@ import com.lullaby.ssjr.common.Constants;
 import com.lullaby.ssjr.common.entity.User;
 import com.lullaby.ssjr.config.redis.JedisTemplate;
 import com.lullaby.ssjr.utils.JwtUtil;
+import com.lullaby.ssjr.utils.UUIDUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
@@ -13,6 +14,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -24,6 +26,10 @@ public class JwtRealm extends AuthorizingRealm {
 
     @Autowired
     private JedisTemplate jedisTemplate;
+    @Value("${shiro.cacheTokenExpireTime}")
+    private String cacheTokenExpireTime;
+    @Value("${shiro.refreshTokenExpireTime}")
+    private String refreshTokenExpireTime;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -41,20 +47,33 @@ public class JwtRealm extends AuthorizingRealm {
         if (claims == null) {
             throw new UnknownAccountException();
         }
-        String account = (String) claims.get("account");
-        log.info("doGetAuthenticationInfo, account: " + account);
-        // 模拟从数据库中查询到的数据
-        User userTemp = new User();
-        userTemp.setAccount("233452@outlook.com");
-        userTemp.setPassword("Rjk2MDVEM0E2NEE1NDFGN0U5OEI4NDU0NUFENDVBOUNCRkExOTc3RTgzNDQ5NTM2NEI0MjkxMDc2NkZBRTNFNQ==");
-        if (userTemp == null) {
-            throw new AuthenticationException("该帐号不存在(The account does not exist.)");
-        }
+        String accessKey = (String) claims.get(Constants.JWT_CLAIMS_KEY_ACCESS_KEY);
+        log.info("doGetAuthenticationInfo, accessKey: " + accessKey);
 
-        if (jedisTemplate.exists(Constants.PREFIX_SHIRO_REFRESH_TOKEN + account)) {
+        if (jedisTemplate.exists(Constants.PREFIX_SHIRO_CACHE + accessKey)) {
+            // redis中存在缓存的认证信息
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_CACHE + accessKey, accessKey, Integer.parseInt(cacheTokenExpireTime));
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey, accessKey, Integer.parseInt(refreshTokenExpireTime));
+            return new SimpleAuthenticationInfo(jwt, jwt, getName());
+        } else if (jedisTemplate.exists(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey)) {
+            // redis中不存在缓存的认证信息，但是存在refreshToken信息
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_CACHE + accessKey, accessKey, Integer.parseInt(cacheTokenExpireTime));
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey, accessKey, Integer.parseInt(refreshTokenExpireTime));
             return new SimpleAuthenticationInfo(jwt, jwt, getName());
         } else {
-            throw new AuthenticationException("Token已过期(Token expired or incorrect.)");
+            // redis中没有任何相关信息
+
+            // 模拟从数据库中查询
+            String account = accessKey.substring(0, accessKey.length() - UUIDUtil.uuidLength());
+            User userTemp = new User();
+            userTemp.setAccount(account);
+            userTemp.setPassword("Rjk2MDVEM0E2NEE1NDFGN0U5OEI4NDU0NUFENDVBOUNCRkExOTc3RTgzNDQ5NTM2NEI0MjkxMDc2NkZBRTNFNQ==");
+            if (userTemp == null) {
+                throw new AuthenticationException("该帐号不存在(The account does not exist.)");
+            }
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_CACHE + accessKey, accessKey, Integer.parseInt(cacheTokenExpireTime));
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey, accessKey, Integer.parseInt(refreshTokenExpireTime));
+            return new SimpleAuthenticationInfo(jwt, jwt, getName());
         }
     }
 

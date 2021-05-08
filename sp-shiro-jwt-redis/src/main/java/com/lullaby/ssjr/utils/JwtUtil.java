@@ -1,5 +1,6 @@
 package com.lullaby.ssjr.utils;
 
+import com.lullaby.ssjr.common.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,7 +35,7 @@ public class JwtUtil {
 
     private static String accessTokenExpireTime;
 
-    @Value("${accessTokenExpireTime}")
+    @Value("${jwt.accessTokenExpireTime}")
     public void setAccessTokenExpireTime(String accessTokenExpireTime) {
         log.info("accessTokenExpireTime: "+accessTokenExpireTime);
         JwtUtil.accessTokenExpireTime = accessTokenExpireTime;
@@ -102,19 +103,19 @@ public class JwtUtil {
         return IOUtils.toString(new FileInputStream(resource.getFile()));
     }
 
-    public static String generateToken(String account) {
+    public static String generateToken(String accessKey) {
         Date nowDate = new Date();
         Date expireDate = new Date(nowDate.getTime() + Long.parseLong(accessTokenExpireTime) * 1000);
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("account", account);
+        claims.put(Constants.JWT_CLAIMS_KEY_ACCESS_KEY, accessKey);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setHeaderParam("typ", "JWT")
                 .setIssuedAt(nowDate)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, privateKey)
+                .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }
 

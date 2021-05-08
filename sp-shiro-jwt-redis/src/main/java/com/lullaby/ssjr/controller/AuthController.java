@@ -22,7 +22,7 @@ public class AuthController {
 
     @Autowired
     private JedisTemplate jedisTemplate;
-    @Value("${refreshTokenExpireTime}")
+    @Value("${shiro.refreshTokenExpireTime}")
     private String refreshTokenExpireTime;
 
     @PostMapping("/login")
@@ -42,18 +42,16 @@ public class AuthController {
         // 因为密码加密是以帐号+密码的形式进行加密的，所以解密后的对比是前端传过来的帐号+密码
         if (key.equals(userDto.getAccount() + userDto.getPassword())) {
             String currentAuthRequestUUID = UUIDUtil.uuid();
-            String currentTimeMillis = String.valueOf(System.currentTimeMillis());
+            String accessKey = userDto.getAccount() + currentAuthRequestUUID;
 
-            //
-
-            // 清除可能存在的Shiro权限信息缓存
-            if (jedisTemplate.exists(Constants.PREFIX_SHIRO_CACHE + userDto.getAccount())) {
-                //jedisTemplate.delKey(Constants.PREFIX_SHIRO_CACHE + userDto.getAccount());
+            // 清除可能存在的Shiro认证信息缓存
+            if (jedisTemplate.exists(Constants.PREFIX_SHIRO_CACHE + accessKey)) {
+                jedisTemplate.delKey(Constants.PREFIX_SHIRO_CACHE + accessKey);
             }
             // 设置RefreshToken，值为当前时间戳
-            jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + userDto.getAccount(), currentTimeMillis, Integer.parseInt(refreshTokenExpireTime));
-            // 将账号信息 -> accessToken
-            String token = JwtUtil.generateToken(userDto.getAccount());
+            jedisTemplate.setObject(Constants.PREFIX_SHIRO_REFRESH_TOKEN + accessKey, accessKey, Integer.parseInt(refreshTokenExpireTime));
+            // account+uuid -> accessToken
+            String token = JwtUtil.generateToken(accessKey);
             return new ResponseResult(HttpStatus.OK.value(), "登录成功(Login Success.)", token);
         } else {
             throw new CustomException("帐号或密码错误(Account or Password Error.)");

@@ -14,4 +14,6 @@ public class Constants {
      * shiro refresh_token key的前缀
      */
     public static final String PREFIX_SHIRO_REFRESH_TOKEN = "shiro:refresh_token:";
+
+    public static final String JWT_CLAIMS_KEY_ACCESS_KEY = "accessKey";
 }

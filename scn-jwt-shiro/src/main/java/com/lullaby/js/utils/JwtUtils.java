@@ -100,7 +100,7 @@ public class JwtUtils {
                 .setHeaderParam("typ", "JWT")
                 .setIssuedAt(nowDate)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, privateKey)
+                .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }
 
