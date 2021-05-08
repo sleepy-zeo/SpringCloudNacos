@@ -1,4 +1,4 @@
-package com.lullaby.ssjr.handler;
+package com.lullaby.ssjr.process;
 
 import com.lullaby.ssjr.common.ResponseResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;

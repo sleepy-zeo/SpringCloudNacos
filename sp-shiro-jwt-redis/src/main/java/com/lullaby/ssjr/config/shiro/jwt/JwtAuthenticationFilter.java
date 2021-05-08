@@ -7,7 +7,6 @@ import com.lullaby.ssjr.utils.JwtUtil;
 import com.lullaby.ssjr.utils.PropertiesUtil;
 import com.lullaby.ssjr.utils.UUIDUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -66,11 +65,7 @@ public class JwtAuthenticationFilter extends AuthenticationFilter {
         String jwt = (String) jwtToken.getCredentials();
 
         Claims claims;
-        try {
-            claims = JwtUtil.getClaimByToken(jwt);
-        } catch (ExpiredJwtException e) {
-            throw new CustomException(e.getMessage());
-        }
+        claims = JwtUtil.getClaimByToken(jwt);
         if (claims == null) {
             throw new UnknownAccountException("claims is null");
         }
