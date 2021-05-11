@@ -29,6 +29,7 @@
         <module>scn-shiro</module>
         <module>scn-jwt-shiro</module>
         <module>sp-shiro-jwt-redis</module>
+        <module>scn-date-format</module>
     </modules>
 
     <properties>

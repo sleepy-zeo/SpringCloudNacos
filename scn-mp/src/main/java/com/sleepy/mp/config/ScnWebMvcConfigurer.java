@@ -22,6 +22,17 @@ public class ScnWebMvcConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(new ScnInterceptor()).addPathPatterns("/**").excludePathPatterns("/scn/test");
     }
 
+    /**
+     * preHandle返回true
+     * preHandle1 -> preHandle2 -> preHandle3
+     * -> Controller ->
+     * postHandle3 -> postHandle2 -> postHandle1
+     * afterCompletion3 -> afterCompletion2 -> afterCompletion1
+     *
+     *  preHandle3返回false
+     *  preHandle1 -> preHandle2 -> preHandle3
+     *  -> afterCompletion2 -> afterCompletion1
+     */
     private static class ScnInterceptor implements HandlerInterceptor {
 
         // 会在Controller处理前调用该方法，返回true则进入对应的Controller
