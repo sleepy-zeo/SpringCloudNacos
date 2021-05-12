@@ -3,6 +3,8 @@ package com.lullaby.format.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,8 +17,8 @@ public class Blog {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     // DateTimeFormat(json转object) 指定要传入的参数的格式，如果不对应会抛出异常，pattern必须和JsonFormat中的一样
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    @JsonSerialize(using = SD.class)
-    @JsonDeserialize(using = LD.class)
+    @JsonSerialize(using = DateSerializer.class)
+    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     public Date createTime;
 
     @Override
