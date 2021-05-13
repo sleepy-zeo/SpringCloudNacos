@@ -30,6 +30,7 @@
         <module>scn-jwt-shiro</module>
         <module>sp-shiro-jwt-redis</module>
         <module>scn-date-format</module>
+        <module>scn-websocket</module>
     </modules>
 
     <properties>
