@@ -31,6 +31,7 @@
         <module>sp-shiro-jwt-redis</module>
         <module>scn-date-format</module>
         <module>scn-websocket</module>
+        <module>scn-spring-boot-websocket</module>
     </modules>
 
     <properties>
