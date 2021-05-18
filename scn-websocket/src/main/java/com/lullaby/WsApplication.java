@@ -1,4 +1,4 @@
-package com.lullaby.ws;
+package com.lullaby;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

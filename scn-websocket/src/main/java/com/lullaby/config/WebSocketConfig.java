@@ -1,4 +1,4 @@
-package com.lullaby.ws.config;
+package com.lullaby.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

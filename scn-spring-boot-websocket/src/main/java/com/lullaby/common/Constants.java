@@ -1,4 +1,4 @@
-package com.lullaby.ws.common;
+package com.lullaby.common;
 
 public class Constants {
 

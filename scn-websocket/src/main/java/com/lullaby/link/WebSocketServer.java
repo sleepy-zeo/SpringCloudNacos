@@ -1,4 +1,4 @@
-package com.lullaby.ws.link;
+package com.lullaby.link;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

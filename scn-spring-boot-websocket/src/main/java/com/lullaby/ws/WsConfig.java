@@ -1,7 +1,6 @@
-package com.lullaby.ws.config;
+package com.lullaby.ws;
 
-import com.lullaby.ws.common.Constants;
-import com.lullaby.ws.handler.WsHandler;
+import com.lullaby.common.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

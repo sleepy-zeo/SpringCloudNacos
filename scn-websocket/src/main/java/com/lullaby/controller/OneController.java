@@ -1,7 +1,7 @@
-package com.lullaby.ws.controller;
+package com.lullaby.controller;
 
-import com.lullaby.ws.link.WebSocketServer;
-import com.lullaby.ws.manager.WsManager;
+import com.lullaby.link.WebSocketServer;
+import com.lullaby.manager.WsManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
