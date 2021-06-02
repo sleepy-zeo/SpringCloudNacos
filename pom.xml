@@ -32,6 +32,7 @@
         <module>scn-date-format</module>
         <module>scn-websocket</module>
         <module>scn-spring-boot-websocket</module>
+        <module>scn-mb</module>
     </modules>
 
     <properties>
