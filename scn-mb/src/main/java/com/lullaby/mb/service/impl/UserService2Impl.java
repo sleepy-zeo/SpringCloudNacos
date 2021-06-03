@@ -6,6 +6,7 @@ import com.lullaby.mb.service.UserService2;
 import com.lullaby.mb.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,20 +27,19 @@ public class UserService2Impl implements UserService2 {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, readOnly = true)
     public void readUser() {
         List<User> users = userMapper.getUsers();
         System.out.println("users: " + users);
 
         try {
-            Thread.sleep(15000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("============");
 
-        List<User> users2 = userMapper.getUsers();
-        System.out.println("users: " + users2);
-        System.out.println("\n\n\n");
+        List<User> usersUpdate = userMapper.getUsers();
+        System.out.println("users: " + usersUpdate);
+        System.out.println("\n");
     }
 }
