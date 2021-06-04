@@ -5,6 +5,11 @@ import com.lullaby.raw.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -21,6 +26,17 @@ public class UserController {
     @GetMapping
     public User select(int uid) {
         return userService.select(uid);
+    }
+
+    @GetMapping("/batch")
+    public Set<User> selectUsers() {
+
+        List<Integer> uids = new ArrayList<>();
+        uids.add(100);
+        uids.add(101);
+
+        System.out.println(uids);
+        return userService.selectUsers(uids);
     }
 
     @PutMapping

@@ -11,3 +11,5 @@ spring:
 logging:
   level:
     com.lullaby: debug
+    org.apache: warn
+    root: info

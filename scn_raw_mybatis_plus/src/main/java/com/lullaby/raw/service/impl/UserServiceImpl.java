@@ -9,7 +9,9 @@ import com.lullaby.raw.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, IService<User> {
@@ -43,5 +45,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid", uid);
         return userMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public Set<User> selectUsers(List<Integer> uids) {
+        return userMapper.selectUsers(uids);
     }
 }
