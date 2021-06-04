@@ -1,0 +1,13 @@
+server:
+  port: 1630
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/raw_mp?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1994
+
+logging:
+  level:
+    com.lullaby: debug

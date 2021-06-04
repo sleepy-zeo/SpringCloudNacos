@@ -33,6 +33,7 @@
         <module>scn-websocket</module>
         <module>scn-spring-boot-websocket</module>
         <module>scn-mb</module>
+        <module>scn_raw_mybatis_plus</module>
     </modules>
 
     <properties>
