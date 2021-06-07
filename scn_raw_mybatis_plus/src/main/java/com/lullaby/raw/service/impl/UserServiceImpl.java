@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -49,6 +50,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Set<User> selectUsers(List<Integer> uids) {
-        return userMapper.selectUsers(uids);
+        return userMapper.selectUsersWithList(uids);
+    }
+
+    @Override
+    public User selectUser(Map<String, Object> pairs) {
+        return userMapper.selectUser(pairs);
+    }
+
+    @Override
+    public Set<User> selectUsers_(Map<String, Object> pairs) {
+        return userMapper.selectUsersWithMap(pairs);
     }
 }

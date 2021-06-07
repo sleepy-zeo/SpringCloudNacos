@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lullaby.raw.domain.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface UserService extends IService<User> {
@@ -17,4 +18,8 @@ public interface UserService extends IService<User> {
     User select(int uid);
 
     Set<User> selectUsers(List<Integer> uids);
+
+    User selectUser(Map<String, Object> pairs);
+
+    Set<User> selectUsers_(Map<String, Object> pairs);
 }
