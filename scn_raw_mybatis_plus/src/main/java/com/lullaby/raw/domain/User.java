@@ -16,7 +16,7 @@ public class User {
 
     private String name;
 
-    @TableLogic(value = "1",delval = "0")
+    @TableLogic(value = "1", delval = "0")
     private int isDel;
 
     @TableField(fill = FieldFill.INSERT)

@@ -2,11 +2,15 @@ package com.lullaby.raw.restful;
 
 import com.lullaby.raw.domain.User;
 import com.lullaby.raw.service.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Api(tags = "user操作")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -61,6 +65,12 @@ public class UserController {
     @DeleteMapping
     public String delete(User user) {
         userService.deleteUser(user.getUid());
+        return "success";
+    }
+
+    @GetMapping("/test")
+    public String test(@PageableDefault Pageable pageable) {
+        System.out.println("--" + pageable);
         return "success";
     }
 }

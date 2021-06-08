@@ -62,4 +62,50 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Set<User> selectUsers_(Map<String, Object> pairs) {
         return userMapper.selectUsersWithMap(pairs);
     }
+
+    public void queryWrapperApis() {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        // equal
+        queryWrapper.eq("name", "steven");
+        // name = "steven" and age = 24
+        queryWrapper.eq("name", "steven").eq("age", 24);
+        // not equal
+        queryWrapper.ne("name", "steven");
+        // greater than
+        queryWrapper.gt("age", 18);
+        // not lower than
+        queryWrapper.ge("age", 18);
+        // lower than
+        queryWrapper.lt("age", 62);
+        // not greater than
+        queryWrapper.le("age", 62);
+        // between
+        queryWrapper.between("uid", 100, 108);
+        // not between
+        queryWrapper.notBetween("uid", 100, 108);
+        // like %scn%
+        queryWrapper.like("name", "scn");
+        // not like %scn%
+        queryWrapper.notLike("name", "scn");
+        // like %scn
+        queryWrapper.likeLeft("name", "scn");
+        // like scn%
+        queryWrapper.likeRight("name", "scn");
+        // in (11, 13, ..., 37)
+        queryWrapper.in("age", 11, 13, 17, 19, 23, 29, 31, 37);
+        // not in (11, 13, ..., 37)
+        queryWrapper.notIn("age", 11, 13, 17, 19, 23, 29, 31, 37);
+
+        // or的简单用法
+        queryWrapper.eq("app_type", "wechat")
+                .or()
+                .eq("app_code", "M109733");
+
+        // where actor_id > 10 AND (first_name LIKE '%A%' OR last_name LIKE '%A%');
+        queryWrapper.ge("actor_id", 10).and(Wrapper -> Wrapper.like("first_name", "mama").or().like("last_name ", "mama"));
+
+        // where actor_id > 10 OR (first_name LIKE '%A%' AND last_name LIKE '%A%');
+        queryWrapper.ge("actor_id", 10).or(Wrapper -> Wrapper.like("first_name", "mama").like("last_name ", "mama"));
+
+    }
 }
