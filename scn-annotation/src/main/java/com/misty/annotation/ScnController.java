@@ -20,7 +20,6 @@ public class ScnController {
     @ResponseBody
     @ScnAnnotation(desc = "my name is misty")
     public String hello() {
-        System.out.println("hello");
         return "hello";
     }
 

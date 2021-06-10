@@ -1,5 +1,7 @@
 package com.lullaby.raw.restful;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lullaby.raw.domain.User;
 import com.lullaby.raw.service.UserService;
 import io.swagger.annotations.Api;
@@ -69,8 +71,18 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    public String test(@PageableDefault Pageable pageable) {
+    public PageInfo<?> test(@PageableDefault Pageable pageable) {
         System.out.println("--" + pageable);
-        return "success";
+
+        String order;
+        order = pageable.getSort().toString().replace(":", "");
+        if ("UNSORTED".equals(order)) {
+            order = "uid desc";
+        }
+        PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize(), order);
+        List<User> userList = userService.list();
+        PageInfo<?> pageInfo = new PageInfo<>(userList);
+
+        return pageInfo;
     }
 }

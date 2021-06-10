@@ -53,13 +53,13 @@ public class SwaggerConfig {
     @ApiModel
     @Data
     public static class Page {
-        @ApiModelProperty(value = "第page页，从0开始计数", example = "0")
+        @ApiModelProperty(value = "第page页，从1开始计数", example = "1")
         private Integer page;
 
-        @ApiModelProperty(value = "每页数据数量", example = "10")
+        @ApiModelProperty(value = "每页数据数量", example = "5")
         private Integer size;
 
-        @ApiModelProperty(value = "排序方式，比如id,asc")
+        @ApiModelProperty(value = "排序方式，比如uid,asc")
         private List<String> sort;
     }
 }
