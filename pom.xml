@@ -34,6 +34,7 @@
         <module>scn-spring-boot-websocket</module>
         <module>scn-mb</module>
         <module>scn_raw_mybatis_plus</module>
+        <module>scn-druid</module>
     </modules>
 
     <properties>
