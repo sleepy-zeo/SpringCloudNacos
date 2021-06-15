@@ -8,3 +8,29 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/springboot?characterEncoding=utf8
     username: root
     password: 1994
+    # 初始化时建立的物理连接的个数
+    initialSize: 5
+    # 连接池中最小连接个数，一般和initialSize保持一致
+    minIdle: 5
+    # 连接池中最大连接个数
+    maxActive: 50
+    # 获取连接最大等待时间(ms)
+    maxWait: 60000
+    # 配置检测连接是否有效的时间间隔(ms)
+    timeBetweenEvictionRunsMillis: 60000
+    # 连接保持空闲而不会被驱逐的最短时间(ms)
+    minEvictableIdleTimeMillis: 300000
+    # 用来检测连接是否有效的sql
+    validationQuery: SELECT 1 FROM DUAL
+    # 配置为true，当连接空闲时间大于timeBetweenEvictionRunsMillis就会执行validationQuery检测连接是否还有效
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 是否缓存preparedStatement，mysql下设置为false
+    poolPreparedStatements: false
+    # -1表示关闭
+    maxPoolPreparedStatementPerConnectionSize: -1
+    # 配置监控统计拦截的filters
+    filters: stat,wall,log4j
+    # 通过connectProperties属性来打开mergeSql功能，慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000

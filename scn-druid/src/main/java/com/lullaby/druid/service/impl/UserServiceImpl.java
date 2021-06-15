@@ -17,4 +17,9 @@ public class UserServiceImpl implements UserService {
     public List<User> select() {
         return userMapper.select();
     }
+
+    @Override
+    public User select(int uid) {
+        return userMapper.selectOne(uid);
+    }
 }

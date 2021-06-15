@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserService {
 
     List<User> select();
+
+    User select(int uid);
 }
