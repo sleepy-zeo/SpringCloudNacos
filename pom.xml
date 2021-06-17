@@ -35,6 +35,7 @@
         <module>scn-mb</module>
         <module>scn_raw_mybatis_plus</module>
         <module>scn-druid</module>
+        <module>scn-binding</module>
     </modules>
 
     <properties>
