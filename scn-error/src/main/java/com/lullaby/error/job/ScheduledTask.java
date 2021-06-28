@@ -13,6 +13,6 @@ public class ScheduledTask {
     @Scheduled(cron = "*/10 * * * * ?")
     public void record() {
         count++;
-        log.info("record: " + count);
+        //log.info("record: " + count);
     }
 }

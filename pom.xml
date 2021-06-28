@@ -36,6 +36,8 @@
         <module>scn_raw_mybatis_plus</module>
         <module>scn-druid</module>
         <module>scn-binding</module>
+        <module>scn-thymeleaf</module>
+        <module>scn-cache</module>
     </modules>
 
     <properties>
