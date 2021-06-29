@@ -1,5 +1,6 @@
 package com.mogu.cache.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -11,7 +12,8 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1090414879337379481L;
 
-    private int id;
+    @TableId
+    private Integer id;
     private String name;
-    private int age;
+    private Integer age;
 }

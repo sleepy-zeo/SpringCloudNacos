@@ -1,8 +1,7 @@
 package com.mogu.cache.config;
 
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -16,9 +15,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-@EnableCaching
 @Configuration
-public class CacheConfig extends CachingConfigurerSupport {
+public class CacheConfig {
 
     // 配置缓存管理器
     @Bean
@@ -40,11 +38,12 @@ public class CacheConfig extends CachingConfigurerSupport {
         // 基本配置
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
+                // StringRedisSerializer用于序列化字符串
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                // GenericJackson2JsonRedisSerializer用于序列化对象
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
                 .disableCachingNullValues()
                 .entryTtl(Duration.ofSeconds(seconds));
         return redisCacheConfiguration;
     }
-
 }
