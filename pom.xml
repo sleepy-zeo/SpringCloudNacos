@@ -38,6 +38,7 @@
         <module>scn-binding</module>
         <module>scn-thymeleaf</module>
         <module>scn-cache</module>
+        <module>scn-war</module>
     </modules>
 
     <properties>
