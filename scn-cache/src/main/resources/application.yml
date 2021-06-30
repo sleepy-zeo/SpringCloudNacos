@@ -4,14 +4,16 @@ server:
 spring:
   redis:
     database: 0
-    host: 10.0.75.1
+    host: 139.196.124.122
     port: 6379
+    password: 1994
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://10.0.75.1doc:3306/scn_cache?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://139.196.124.122:3306/mogu_cache?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
     username: root
     password: 1994
 
 logging:
   level:
-    root: debug
+    root: info
+    com.mogu: debug

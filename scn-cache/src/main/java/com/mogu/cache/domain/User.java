@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@TableName("user")
+@TableName("tb_user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1090414879337379481L;
