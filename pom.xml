@@ -39,6 +39,7 @@
         <module>scn-thymeleaf</module>
         <module>scn-cache</module>
         <module>scn-war</module>
+        <module>scn-nginx-index</module>
     </modules>
 
     <properties>
