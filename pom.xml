@@ -40,6 +40,7 @@
         <module>scn-cache</module>
         <module>scn-war</module>
         <module>scn-nginx-index</module>
+        <module>duck-mybatis-generator</module>
     </modules>
 
     <properties>
