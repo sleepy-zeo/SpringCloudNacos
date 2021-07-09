@@ -18,29 +18,30 @@
         <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
 
         <!-- 非官方插件 https://github.com/itfsw/mybatis-generator-plugin -->
-        <!-- 查询单条数据插件 -->
-<!--        <plugin type="com.itfsw.mybatis.generator.plugins.SelectOneByExamplePlugin"/>-->
+        <!-- 查询单条数据插件，增加了selectOneByExample和selectOneByExampleWithBLOBs-->
+        <plugin type="com.itfsw.mybatis.generator.plugins.SelectOneByExamplePlugin"/>
 
 
 
 
 
-<!--        &lt;!&ndash; 查询结果选择性返回插件 &ndash;&gt;-->
-<!--        <plugin type="com.itfsw.mybatis.generator.plugins.SelectSelectivePlugin"/>-->
-<!--        &lt;!&ndash; Example Criteria 增强插件 &ndash;&gt;-->
+        <!-- 查询结果选择性返回插件 -->
+        <!-- 查询操作精确需要返回的列，增加了selectByExampleSelective，selectByPrimaryKeySelective，selectOneByExampleSelective -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.SelectSelectivePlugin"/>
+        <!-- 获取model中属性对应的column -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin"/>
+        <!-- Example Criteria 增强插件 -->
 <!--        <plugin type="com.itfsw.mybatis.generator.plugins.ExampleEnhancedPlugin"/>-->
-<!--        &lt;!&ndash; 数据Model属性对应Column获取插件 &ndash;&gt;-->
-<!--        <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin"/>-->
-<!--        &lt;!&ndash; 逻辑删除插件 &ndash;&gt;-->
-<!--        <plugin type="com.itfsw.mybatis.generator.plugins.LogicalDeletePlugin">-->
-<!--            &lt;!&ndash; 这里配置的是全局逻辑删除列和逻辑删除值，当然在table中配置的值会覆盖该全局配置 &ndash;&gt;-->
-<!--            &lt;!&ndash; 逻辑删除列类型只能为数字、字符串或者布尔类型 &ndash;&gt;-->
-<!--            <property name="logicalDeleteColumn" value="deleted"/>-->
-<!--            &lt;!&ndash; 逻辑删除-已删除值 &ndash;&gt;-->
-<!--            <property name="logicalDeleteValue" value="1"/>-->
-<!--            &lt;!&ndash; 逻辑删除-未删除值 &ndash;&gt;-->
-<!--            <property name="logicalUnDeleteValue" value="0"/>-->
-<!--        </plugin>-->
+
+        <!-- 逻辑删除插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.LogicalDeletePlugin">
+            <!-- 逻辑删除列类型只能为数字、字符串或者布尔类型 -->
+            <property name="logicalDeleteColumn" value="deleted"/>
+            <!-- 逻辑删除，1表示已删除 -->
+            <property name="logicalDeleteValue" value="1"/>
+            <!-- 逻辑删除，0表示未删除 -->
+            <property name="logicalUnDeleteValue" value="0"/>
+        </plugin>
 
 
 
