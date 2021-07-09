@@ -21,6 +21,7 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!-- mybatis generator插件 -->
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
                 <version>1.3.7</version>
